@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Project One</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    header {
+      background-color: #0073e6; /* Blue header */
+      padding: 10px;
+    }
+
+    header input[type="text"] {
+      width: 200px;
+      padding: 5px;
+    }
+
+    .container {
+      display: flex;
+    }
+
+    .sidebar {
+      background-color: #ffcc00; /* Yellow sidebar */
+      width: 200px;
+      padding: 15px;
+    }
+
+    .sidebar ul {
+      list-style-type: disc;
+      padding-left: 20px;
+    }
+
+    .sidebar li {
+      margin: 10px 0;
+    }
+
+    .sidebar a {
+      text-decoration: none;
+      color: black;
+    }
+
+    .content {
+      flex-grow: 1;
+      padding: 20px;
+    }
+
+    .content h1 {
+      margin-top: 0;
+    }
+
+    .content img {
+      max-width: 100%;
+      height: auto;
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <input type="text" placeholder="Search...">
+  </header>
+  
+  <div class="container">
+    <nav class="sidebar">
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">About us</a></li>
+        <li><a href="#">Contact us</a></li>
+        <li><a href="#">Doc</a></li>
+      </ul>
+    </nav>
+    
+    <main class="content">
+      <h1>My Web site</h1>
+      <img src="https://time.com/3933638/solar-panels-house/" alt="Electronic components on solar panels">
+      <p>
+        As the software industry moves into the second decade of the 21st century, software quality is increasingly becoming essential to all businesses and knowledge of software testing is becoming necessary for all software engineers. The course focus on the theoretical concepts of Software Testing with high emphasis on inclusion of the practical context which is equally needed to prepare the learner for the demands of this field in the workplace.
+      </p>
+    </main>
+  </div>
+</body>
+</html>

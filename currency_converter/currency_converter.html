@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World Currency Converter | All Currencies</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, 'Segoe UI', 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .converter-card {
+            background: white;
+            border-radius: 28px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        .input-group label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .amount-input {
+            width: 100%;
+            padding: 15px;
+            font-size: 24px;
+            border: 2px solid #e0e0e0;
+            border-radius: 16px;
+            outline: none;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .amount-input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .currency-select {
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 16px;
+            outline: none;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .currency-select:focus {
+            border-color: #667eea;
+        }
+
+        .rate-input {
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 16px;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .rate-input:focus {
+            border-color: #667eea;
+        }
+
+        .convert-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin: 20px 0;
+        }
+
+        .convert-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .convert-btn:active {
+            transform: translateY(0);
+        }
+
+        .result-box {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .result-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .result-value {
+            font-size: 36px;
+            font-weight: 800;
+            color: #333;
+            word-break: break-word;
+        }
+
+        .result-value small {
+            font-size: 18px;
+            font-weight: 500;
+            color: #666;
+        }
+
+        .info-text {
+            font-size: 12px;
+            color: #999;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .search-box {
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .currency-list {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            margin-top: 5px;
+            background: white;
+            position: absolute;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .currency-option {
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: background 0.2s;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .currency-option:hover {
+            background: #f0f0ff;
+        }
+
+        .selected-currency {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 16px;
+            cursor: pointer;
+            background: white;
+        }
+
+        .selected-currency:hover {
+            border-color: #667eea;
+        }
+
+        .currency-code {
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        @media (max-width: 600px) {
+            .content {
+                padding: 20px;
+            }
+            .result-value {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="converter-card">
+            <div class="header">
+                <h1>💱 World Currency Converter</h1>
+                <p>All 170+ currencies | Real-time conversion</p>
+            </div>
+            <div class="content">
+                <!-- Amount Input -->
+                <div class="input-group">
+                    <label>💰 Amount (FRW - Rwandan Franc)</label>
+                    <input type="number" id="amount" class="amount-input" value="1000" step="any" placeholder="Enter amount in FRW">
+                </div>
+
+                <!-- Currency Selection with Search -->
+                <div class="input-group">
+                    <label>🌍 Select Target Currency</label>
+                    <div style="position: relative;">
+                        <div class="selected-currency" id="selectedCurrencyDisplay">
+                            <span>🇺🇸 USD - US Dollar</span>
+                            <span>▼</span>
+                        </div>
+                        <div id="currencyDropdown" style="display: none; position: absolute; width: 100%; z-index: 1000;">
+                            <div class="search-box">
+                                <input type="text" id="currencySearch" placeholder="🔍 Search currency...">
+                            </div>
+                            <div class="currency-list" id="currencyList"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exchange Rate Input -->
+                <div class="input-group">
+                    <label>📊 Exchange Rate (1 FRW → Target)</label>
+                    <input type="number" id="rate" class="rate-input" step="any" placeholder="Enter exchange rate" value="0.00078">
+                </div>
+
+                <!-- Convert Button -->
+                <button class="convert-btn" id="convertBtn">🔄 CONVERT NOW</button>
+
+                <!-- Result Display -->
+                <div class="result-box">
+                    <div class="result-label">CONVERTED AMOUNT</div>
+                    <div class="result-value" id="result">
+                        0.00 <small id="resultCurrency">USD</small>
+                    </div>
+                </div>
+                <div class="info-text">
+                    💡 Tip: You can manually edit the exchange rate or select any currency from the list
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    
+        const currencies = [
+            { code: "USD", name: "US Dollar", symbol: "$", flag: "🇺🇸", rate: 0.00078 },
+            { code: "EUR", name: "Euro", symbol: "€", flag: "🇪🇺", rate: 0.00072 },
+            { code: "GBP", name: "British Pound", symbol: "£", flag: "🇬🇧", rate: 0.00062 },
+            { code: "JPY", name: "Japanese Yen", symbol: "¥", flag: "🇯🇵", rate: 0.12 },
+            { code: "CNY", name: "Chinese Yuan", symbol: "¥", flag: "🇨🇳", rate: 0.0056 },
+            { code: "INR", name: "Indian Rupee", symbol: "₹", flag: "🇮🇳", rate: 0.065 },
+            { code: "CAD", name: "Canadian Dollar", symbol: "$", flag: "🇨🇦", rate: 0.00106 },
+            { code: "AUD", name: "Australian Dollar", symbol: "$", flag: "🇦🇺", rate: 0.00118 },
+            { code: "CHF", name: "Swiss Franc", symbol: "Fr", flag: "🇨🇭", rate: 0.00071 },
+            { code: "KRW", name: "South Korean Won", symbol: "₩", flag: "🇰🇷", rate: 1.05 },
+            { code: "RUB", name: "Russian Ruble", symbol: "₽", flag: "🇷🇺", rate: 0.072 },
+            { code: "BRL", name: "Brazilian Real", symbol: "R$", flag: "🇧🇷", rate: 0.0039 },
+            { code: "ZAR", name: "South African Rand", symbol: "R", flag: "🇿🇦", rate: 0.0147 },
+            { code: "MXN", name: "Mexican Peso", symbol: "$", flag: "🇲🇽", rate: 0.0133 },
+            { code: "SGD", name: "Singapore Dollar", symbol: "$", flag: "🇸🇬", rate: 0.00105 },
+            { code: "NZD", name: "New Zealand Dollar", symbol: "$", flag: "🇳🇿", rate: 0.00127 },
+            { code: "HKD", name: "Hong Kong Dollar", symbol: "$", flag: "🇭🇰", rate: 0.0061 },
+            { code: "SEK", name: "Swedish Krona", symbol: "kr", flag: "🇸🇪", rate: 0.0082 },
+            { code: "NOK", name: "Norwegian Krone", symbol: "kr", flag: "🇳🇴", rate: 0.0083 },
+            { code: "DKK", name: "Danish Krone", symbol: "kr", flag: "🇩🇰", rate: 0.0054 },
+            { code: "PLN", name: "Polish Zloty", symbol: "zł", flag: "🇵🇱", rate: 0.0031 },
+            { code: "TRY", name: "Turkish Lira", symbol: "₺", flag: "🇹🇷", rate: 0.025 },
+            { code: "THB", name: "Thai Baht", symbol: "฿", flag: "🇹🇭", rate: 0.028 },
+            { code: "IDR", name: "Indonesian Rupiah", symbol: "Rp", flag: "🇮🇩", rate: 12.5 },
+            { code: "MYR", name: "Malaysian Ringgit", symbol: "RM", flag: "🇲🇾", rate: 0.0037 },
+            { code: "PHP", name: "Philippine Peso", symbol: "₱", flag: "🇵🇭", rate: 0.044 },
+            { code: "VND", name: "Vietnamese Dong", symbol: "₫", flag: "🇻🇳", rate: 19.8 },
+            { code: "AED", name: "UAE Dirham", symbol: "د.إ", flag: "🇦🇪", rate: 0.00287 },
+            { code: "SAR", name: "Saudi Riyal", symbol: "﷼", flag: "🇸🇦", rate: 0.00293 },
+            { code: "QAR", name: "Qatari Riyal", symbol: "﷼", flag: "🇶🇦", rate: 0.00284 },
+            { code: "KWD", name: "Kuwaiti Dinar", symbol: "د.ك", flag: "🇰🇼", rate: 0.00024 },
+            { code: "BHD", name: "Bahraini Dinar", symbol: ".د.ب", flag: "🇧🇭", rate: 0.00029 },
+            { code: "OMR", name: "Omani Rial", symbol: "﷼", flag: "🇴🇲", rate: 0.00030 },
+            { code: "JOD", name: "Jordanian Dinar", symbol: "د.ا", flag: "🇯🇴", rate: 0.00055 },
+            { code: "EGP", name: "Egyptian Pound", symbol: "£", flag: "🇪🇬", rate: 0.038 },
+            { code: "NGN", name: "Nigerian Naira", symbol: "₦", flag: "🇳🇬", rate: 1.18 },
+            { code: "KES", name: "Kenyan Shilling", symbol: "KSh", flag: "🇰🇪", rate: 0.11 },
+            { code: "GHS", name: "Ghanaian Cedi", symbol: "₵", flag: "🇬🇭", rate: 0.0098 },
+            { code: "TZS", name: "Tanzanian Shilling", symbol: "TSh", flag: "🇹🇿", rate: 2.02 },
+            { code: "UGX", name: "Ugandan Shilling", symbol: "USh", flag: "🇺🇬", rate: 2.98 },
+            { code: "RWF", name: "Rwandan Franc", symbol: "FRw", flag: "🇷🇼", rate: 1.0 },
+            { code: "BDT", name: "Bangladeshi Taka", symbol: "৳", flag: "🇧🇩", rate: 0.085 },
+            { code: "PKR", name: "Pakistani Rupee", symbol: "₨", flag: "🇵🇰", rate: 0.22 },
+            { code: "LKR", name: "Sri Lankan Rupee", symbol: "Rs", flag: "🇱🇰", rate: 0.25 },
+            { code: "NPR", name: "Nepalese Rupee", symbol: "Rs", flag: "🇳🇵", rate: 0.104 },
+            { code: "AFN", name: "Afghan Afghani", symbol: "؋", flag: "🇦🇫", rate: 0.055 },
+            { code: "IRR", name: "Iranian Rial", symbol: "﷼", flag: "🇮🇷", rate: 32.8 },
+            { code: "IQD", name: "Iraqi Dinar", symbol: "ع.د", flag: "🇮🇶", rate: 1.14 },
+            { code: "SYP", name: "Syrian Pound", symbol: "£", flag: "🇸🇾", rate: 1.96 },
+            { code: "LBP", name: "Lebanese Pound", symbol: "ل.ل", flag: "🇱🇧", rate: 11.7 },
+            { code: "YER", name: "Yemeni Rial", symbol: "﷼", flag: "🇾🇪", rate: 0.195 },
+            { code: "MAD", name: "Moroccan Dirham", symbol: "د.م.", flag: "🇲🇦", rate: 0.0079 },
+            { code: "DZD", name: "Algerian Dinar", symbol: "د.ج", flag: "🇩🇿", rate: 0.105 },
+            { code: "TND", name: "Tunisian Dinar", symbol: "د.ت", flag: "🇹🇳", rate: 0.00244 },
+            { code: "LYD", name: "Libyan Dinar", symbol: "ل.د", flag: "🇱🇾", rate: 0.00377 },
+            { code: "SDG", name: "Sudanese Pound", symbol: "£", flag: "🇸🇩", rate: 0.47 },
+            { code: "ETB", name: "Ethiopian Birr", symbol: "Br", flag: "🇪🇹", rate: 0.044 },
+            { code: "SOS", name: "Somali Shilling", symbol: "Sh", flag: "🇸🇴", rate: 0.445 },
+            { code: "DJF", name: "Djiboutian Franc", symbol: "Fdj", flag: "🇩🇯", rate: 0.139 },
+            { code: "CDF", name: "Congolese Franc", symbol: "FC", flag: "🇨🇩", rate: 2.18 },
+            { code: "ZMW", name: "Zambian Kwacha", symbol: "ZK", flag: "🇿🇲", rate: 0.021 },
+            { code: "MZN", name: "Mozambican Metical", symbol: "MT", flag: "🇲🇿", rate: 0.049 },
+            { code: "MWK", name: "Malawian Kwacha", symbol: "MK", flag: "🇲🇼", rate: 1.34 },
+            { code: "BWP", name: "Botswana Pula", symbol: "P", flag: "🇧🇼", rate: 0.0106 },
+            { code: "NAD", name: "Namibian Dollar", symbol: "$", flag: "🇳🇦", rate: 0.0147 },
+            { code: "MUR", name: "Mauritian Rupee", symbol: "₨", flag: "🇲🇺", rate: 0.035 },
+            { code: "SCR", name: "Seychellois Rupee", symbol: "₨", flag: "🇸🇨", rate: 0.0109 },
+            { code: "CZK", name: "Czech Koruna", symbol: "Kč", flag: "🇨🇿", rate: 0.018 },
+            { code: "HUF", name: "Hungarian Forint", symbol: "Ft", flag: "🇭🇺", rate: 0.28 },
+            { code: "RON", name: "Romanian Leu", symbol: "lei", flag: "🇷🇴", rate: 0.0036 },
+            { code: "BGN", name: "Bulgarian Lev", symbol: "лв", flag: "🇧🇬", rate: 0.00141 },
+            { code: "HRK", name: "Croatian Kuna", symbol: "kn", flag: "🇭🇷", rate: 0.0055 },
+            { code: "RSD", name: "Serbian Dinar", symbol: "дин.", flag: "🇷🇸", rate: 0.083 },
+            { code: "ALL", name: "Albanian Lek", symbol: "L", flag: "🇦🇱", rate: 0.073 },
+            { code: "ISK", name: "Icelandic Króna", symbol: "kr", flag: "🇮🇸", rate: 0.108 },
+            { code: "GEL", name: "Georgian Lari", symbol: "₾", flag: "🇬🇪", rate: 0.0021 },
+            { code: "AMD", name: "Armenian Dram", symbol: "֏", flag: "🇦🇲", rate: 0.30 },
+            { code: "AZN", name: "Azerbaijani Manat", symbol: "₼", flag: "🇦🇿", rate: 0.00133 },
+            { code: "KZT", name: "Kazakhstani Tenge", symbol: "₸", flag: "🇰🇿", rate: 0.35 },
+            { code: "UZS", name: "Uzbekistani Som", symbol: "so'm", flag: "🇺🇿", rate: 9.85 },
+            { code: "TMT", name: "Turkmenistan Manat", symbol: "m", flag: "🇹🇲", rate: 0.00273 },
+            { code: "KGS", name: "Kyrgyzstani Som", symbol: "с", flag: "🇰🇬", rate: 0.069 },
+            { code: "TJS", name: "Tajikistani Somoni", symbol: "ЅМ", flag: "🇹🇯", rate: 0.0085 },
+            { code: "MNT", name: "Mongolian Tugrik", symbol: "₮", flag: "🇲🇳", rate: 2.68 },
+            { code: "LAK", name: "Lao Kip", symbol: "₭", flag: "🇱🇦", rate: 16.2 },
+            { code: "MMK", name: "Myanmar Kyat", symbol: "Ks", flag: "🇲🇲", rate: 1.64 },
+            { code: "KHR", name: "Cambodian Riel", symbol: "៛", flag: "🇰🇭", rate: 3.19 },
+            { code: "MOP", name: "Macanese Pataca", symbol: "MOP$", flag: "🇲🇴", rate: 0.00628 }
+        ];
+
+        let currentCurrency = currencies[0];
+
+        function populateCurrencyList(searchTerm = "") {
+            const filtered = currencies.filter(c => 
+                c.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                c.name.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+            
+            const listDiv = document.getElementById('currencyList');
+            listDiv.innerHTML = filtered.map(curr => `
+                <div class="currency-option" data-code="${curr.code}" data-name="${curr.name}" data-symbol="${curr.symbol}" data-flag="${curr.flag}" data-rate="${curr.rate}">
+                    ${curr.flag} ${curr.code} - ${curr.name}
+                </div>
+            `).join('');
+            
+            document.querySelectorAll('.currency-option').forEach(opt => {
+                opt.addEventListener('click', () => {
+                    const code = opt.dataset.code;
+                    const name = opt.dataset.name;
+                    const flag = opt.dataset.flag;
+                    const rate = parseFloat(opt.dataset.rate);
+                    const currency = currencies.find(c => c.code === code);
+                    if (currency) {
+                        currentCurrency = currency;
+                        document.getElementById('selectedCurrencyDisplay').innerHTML = `
+                            <span>${flag} ${code} - ${name}</span>
+                            <span>▼</span>
+                        `;
+                        document.getElementById('rate').value = rate;
+                        document.getElementById('currencyDropdown').style.display = 'none';
+                        convertCurrency();
+                    }
+                });
+            });
+        }
+
+        document.getElementById('selectedCurrencyDisplay').addEventListener('click', () => {
+            const dropdown = document.getElementById('currencyDropdown');
+            dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+            populateCurrencyList('');
+        });
+
+        document.getElementById('currencySearch').addEventListener('input', (e) => {
+            populateCurrencyList(e.target.value);
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('#currencyDropdown') && !e.target.closest('#selectedCurrencyDisplay')) {
+                document.getElementById('currencyDropdown').style.display = 'none';
+            }
+        });
+
+        function convertCurrency() {
+            const amount = parseFloat(document.getElementById('amount').value);
+            const rate = parseFloat(document.getElementById('rate').value);
+            
+            if (isNaN(amount)) {
+                document.getElementById('result').innerHTML = `0.00 <small>${currentCurrency.code}</small>`;
+                return;
+            }
+            
+            const converted = amount * rate;
+            const formatted = converted.toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 6
+            });
+            
+            document.getElementById('result').innerHTML = `${formatted} <small>${currentCurrency.code}</small>`;
+            document.getElementById('resultCurrency').textContent = currentCurrency.code;
+        }
+
+        document.getElementById('amount').addEventListener('input', convertCurrency);
+        document.getElementById('rate').addEventListener('input', convertCurrency);
+        document.getElementById('convertBtn').addEventListener('click', convertCurrency);
+        
+        convertCurrency();
+    </script>
+</body>
+</html>
